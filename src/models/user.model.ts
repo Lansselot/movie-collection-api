@@ -9,6 +9,9 @@ import {
   BelongsToMany,
   Default,
   DataType,
+  Unique,
+  NotEmpty,
+  IsEmail,
 } from 'sequelize-typescript';
 import { Movie } from './movie.model';
 import { UUIDV4 } from 'sequelize';
@@ -21,15 +24,17 @@ export class User extends Model {
   @Column(DataType.UUID)
   id!: string;
 
-  @AllowNull
+  @NotEmpty
   @Column
   name!: string;
 
-  @AllowNull
+  @NotEmpty
+  @IsEmail
+  @Unique
   @Column
   email!: string;
 
-  @AllowNull
+  @NotEmpty
   @Column
   passwordHash!: string;
 

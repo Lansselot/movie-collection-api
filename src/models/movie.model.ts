@@ -35,7 +35,6 @@ export class Movie extends Model {
   @Column({ type: DataType.ENUM(...Object.values(MovieFormat)) })
   format!: MovieFormat;
 
-  @AllowNull(false)
   @Column(DataType.JSON)
   actors!: string[];
 
