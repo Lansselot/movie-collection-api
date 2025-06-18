@@ -2,20 +2,27 @@ import Boom from '@hapi/boom';
 import { Movie } from '../models/movie.model';
 import { User } from '../models/user.model';
 import { CreateUserDTO, UpdateUserDTO } from '../types/user.dto';
+import bcrypt from 'bcryptjs';
 
 export class UserService {
   public async createUser(data: CreateUserDTO): Promise<User> {
-    return User.create(data);
+    const { name, email, password } = data;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    return User.create({ name, email, passwordHash });
   }
 
-  public async deleteUser(userId: string): Promise<{ success: true }> {
+  public async deleteUserById(userId: string): Promise<{ success: true }> {
     const rowsDeleted = await User.destroy({ where: { id: userId } });
     if (!rowsDeleted) throw Boom.notFound('User not found');
 
     return { success: true };
   }
 
-  public async updateUser(userId: string, data: UpdateUserDTO): Promise<User> {
+  public async updateUserById(
+    userId: string,
+    data: UpdateUserDTO
+  ): Promise<User> {
     const user = await User.findByPk(userId);
     if (!user) throw Boom.notFound('User not found');
 
@@ -25,6 +32,15 @@ export class UserService {
 
   public async getUserById(userId: string): Promise<User> {
     const user = await User.findByPk(userId);
+    if (!user) throw Boom.notFound('User not found');
+
+    return user;
+  }
+
+  public async getUserByEmail(userEmail: string): Promise<User> {
+    const user = await User.findOne({
+      where: { email: userEmail },
+    });
     if (!user) throw Boom.notFound('User not found');
 
     return user;

@@ -9,14 +9,14 @@ export class MovieService {
     return Movie.create(data);
   }
 
-  public async deleteMovie(movieId: string): Promise<{ success: true }> {
+  public async deleteMovieById(movieId: string): Promise<{ success: true }> {
     const rowsDeleted = await Movie.destroy({ where: { id: movieId } });
     if (!rowsDeleted) throw Boom.notFound('Movie not found');
 
     return { success: true };
   }
 
-  public async updateMovie(
+  public async updateMovieById(
     movieId: string,
     data: UpdateMovieDTO
   ): Promise<Movie> {
@@ -38,7 +38,7 @@ export class MovieService {
     return movie;
   }
 
-  public async getMovieByTitle(movieTitle: string): Promise<Movie[]> {
+  public async getMoviesByTitle(movieTitle: string): Promise<Movie[]> {
     const movies = await Movie.findAll({
       where: { title: { [Op.substring]: `%${movieTitle}` } },
     });
@@ -46,7 +46,7 @@ export class MovieService {
     return movies;
   }
 
-  public async getMovieByActor(movieActorName: string): Promise<Movie[]> {
+  public async getMoviesByActor(movieActorName: string): Promise<Movie[]> {
     const movies = await Movie.findAll({
       where: { actors: { [Op.substring]: `%"${movieActorName}"` } },
     });

@@ -1,7 +1,7 @@
 export type CreateUserDTO = {
   name: string;
   email: string;
-  passwordHash: string;
+  password: string;
 };
 
 export type UpdateUserDTO = Partial<CreateUserDTO>;
