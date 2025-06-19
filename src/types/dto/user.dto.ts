@@ -4,4 +4,7 @@ export type CreateUserDTO = {
   password: string;
 };
 
-export type UpdateUserDTO = Partial<CreateUserDTO>;
+export type UpdateUserDTO = {
+  name?: string;
+  email?: string;
+};

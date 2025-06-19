@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { movieService } from '../services';
 import Boom from '@hapi/boom';
-import { CreateMovieDTO, UpdateMovieDTO } from '../types/movie.dto';
+import {
+  CreateMovieDTO,
+  MovieFiltersDTO,
+  UpdateMovieDTO,
+} from '../types/dto/movie.dto';
 
 export class MovieController {
   async createMovie(
@@ -10,7 +14,7 @@ export class MovieController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const data: CreateMovieDTO = req.body.data;
+      const data: CreateMovieDTO = req.body;
 
       const newMovie = await movieService.createMovie(data);
 
@@ -26,7 +30,7 @@ export class MovieController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const movieId = req.params.id;
+      const movieId = req.params.movieId;
 
       await movieService.deleteMovieById(movieId);
 
@@ -42,7 +46,7 @@ export class MovieController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const movieId = req.params.id;
+      const movieId = req.params.movieId;
       const data: UpdateMovieDTO = req.body;
 
       const updatedMovie = await movieService.updateMovieById(movieId, data);
@@ -53,13 +57,20 @@ export class MovieController {
     }
   }
 
-  async getAllMovies(
+  async getMovies(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const movies = await movieService.getAllMovies();
+      const filters: MovieFiltersDTO = {
+        title:
+          typeof req.query.title === 'string' ? req.query.title : undefined,
+        actor:
+          typeof req.query.actor === 'string' ? req.query.actor : undefined,
+      };
+
+      const movies = await movieService.getMovies(filters);
 
       res.json(movies);
     } catch (error) {
@@ -73,47 +84,11 @@ export class MovieController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const movieId = req.params.id;
+      const movieId = req.params.movieId;
 
       const movie = await movieService.getMovieById(movieId);
 
       res.json(movie);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getMovieByTitle(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const movieTitle = req.query.title;
-      if (typeof movieTitle !== 'string')
-        throw Boom.badRequest('Invalid title');
-
-      const movies = await movieService.getMoviesByTitle(movieTitle);
-
-      res.json(movies);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getMoviesByActor(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const movieActor = req.query.actor;
-      if (typeof movieActor !== 'string')
-        throw Boom.badRequest('Invalid actor name');
-
-      const movies = await movieService.getMoviesByActor(movieActor);
-
-      res.json(movies);
     } catch (error) {
       next(error);
     }

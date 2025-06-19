@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { authService, userService } from '../services';
-import { CreateUserDTO } from '../types/user.dto';
+import { CreateUserDTO } from '../types/dto/user.dto';
 
 export class AuthController {
   async register(

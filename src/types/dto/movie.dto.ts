@@ -1,4 +1,4 @@
-import { MovieFormat } from '../models/enums/movie-format.enum';
+import { MovieFormat } from '../../models/enums/movie-format.enum';
 
 export type CreateMovieDTO = {
   title: string;
@@ -8,3 +8,8 @@ export type CreateMovieDTO = {
 };
 
 export type UpdateMovieDTO = Partial<CreateMovieDTO>;
+
+export type MovieFiltersDTO = {
+  title?: string;
+  actor?: string;
+};

@@ -1,12 +1,17 @@
 import Boom from '@hapi/boom';
 import { Movie } from '../models/movie.model';
 import { User } from '../models/user.model';
-import { CreateUserDTO, UpdateUserDTO } from '../types/user.dto';
+import { CreateUserDTO, UpdateUserDTO } from '../types/dto/user.dto';
 import bcrypt from 'bcryptjs';
 
 export class UserService {
   public async createUser(data: CreateUserDTO): Promise<User> {
     const { name, email, password } = data;
+
+    const existingUser = await this.getUserByEmail(email);
+    if (existingUser)
+      throw Boom.conflict('User with this email already exists');
+
     const passwordHash = await bcrypt.hash(password, 10);
 
     return User.create({ name, email, passwordHash });
@@ -26,6 +31,12 @@ export class UserService {
     const user = await User.findByPk(userId);
     if (!user) throw Boom.notFound('User not found');
 
+    if (data.email) {
+      const existingUser = await this.getUserByEmail(data.email);
+      if (existingUser && existingUser.id != userId)
+        throw Boom.conflict('User with this email already exists');
+    }
+
     await user.update(data);
     return user;
   }
@@ -37,11 +48,10 @@ export class UserService {
     return user;
   }
 
-  public async getUserByEmail(userEmail: string): Promise<User> {
+  public async getUserByEmail(userEmail: string): Promise<User | null> {
     const user = await User.findOne({
       where: { email: userEmail },
     });
-    if (!user) throw Boom.notFound('User not found');
 
     return user;
   }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { userService } from '../services';
 import Boom from '@hapi/boom';
-import { UpdateUserDTO } from '../types/user.dto';
+import { UpdateUserDTO } from '../types/dto/user.dto';
 
 export class UserController {
   async getUserById(
@@ -52,21 +52,6 @@ export class UserController {
       await userService.deleteUserById(tokenUserId);
 
       res.sendStatus(204);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getUserByEmail(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const userEmail = req.body.email;
-      const user = await userService.getUserByEmail(userEmail);
-
-      res.json(user);
     } catch (error) {
       next(error);
     }
