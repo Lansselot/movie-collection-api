@@ -1,25 +1,17 @@
 import express, { Express } from 'express';
-import dotenv from 'dotenv';
-import { sequelize } from './sequelize';
+import { authRoutes, movieRoutes, userRoutes } from './routes';
+import { errorHandler } from './middleware/error-handler.middleware';
 
-dotenv.config();
+export const app: Express = express();
 
-async function startSequelize() {
-  try {
-    await sequelize.authenticate();
-    console.log('Database connected');
-    await sequelize.sync();
-    console.log('Database synced');
-  } catch (error) {
-    console.error(error);
-  }
-}
+app.use(express.json());
 
-startSequelize();
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/movies', movieRoutes);
 
-const app: Express = express();
-
-const PORT = process.env.APP_PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use('/', (_, res) => {
+  res.status(404).json({ message: 'Not found' });
 });
+
+app.use(errorHandler);

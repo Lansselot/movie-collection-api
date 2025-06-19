@@ -1,11 +1,11 @@
 {
   "name": "movie-collection-api",
   "version": "1.0.0",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev src/server.ts",
     "docker:build": "docker build -t movie-collection-app .",
     "docker:run": "docker run -d --name movies -p 3000:3000 -e APP_PORT=3000 movie-collection-app",
     "docker:stop": "docker stop movies",
