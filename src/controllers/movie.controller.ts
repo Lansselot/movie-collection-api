@@ -6,6 +6,8 @@ import {
   MovieFiltersDTO,
   UpdateMovieDTO,
 } from '../types/dto/movie.dto';
+import { MovieSortField } from '../models/enums/movie-sort-format.enum';
+import { SortOrder } from '../models/enums/sort-order.enum';
 
 export class MovieController {
   async createMovie(
@@ -63,11 +65,20 @@ export class MovieController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const { title, actor, sort, order, limit, offset } = req.query;
+
       const filters: MovieFiltersDTO = {
-        title:
-          typeof req.query.title === 'string' ? req.query.title : undefined,
-        actor:
-          typeof req.query.actor === 'string' ? req.query.actor : undefined,
+        title: typeof title === 'string' ? title : undefined,
+        actor: typeof actor === 'string' ? actor : undefined,
+        sort: Object.values(MovieSortField).includes(sort as MovieSortField)
+          ? (sort as MovieSortField)
+          : undefined,
+        order: Object.values(SortOrder).includes(order as SortOrder)
+          ? (order as SortOrder)
+          : undefined,
+        limit: limit !== undefined ? parseInt(limit as string, 10) : undefined,
+        offset:
+          offset !== undefined ? parseInt(offset as string, 10) : undefined,
       };
 
       const movies = await movieService.getMovies(filters);

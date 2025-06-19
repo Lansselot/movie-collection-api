@@ -7,6 +7,8 @@ import {
   UpdateMovieDTO,
 } from '../types/dto/movie.dto';
 import { Op } from 'sequelize';
+import { MovieSortField } from '../models/enums/movie-sort-format.enum';
+import { SortOrder } from '../models/enums/sort-order.enum';
 
 export class MovieService {
   public async createMovie(data: CreateMovieDTO): Promise<Movie> {
@@ -32,7 +34,14 @@ export class MovieService {
   }
 
   public async getMovies(filters: MovieFiltersDTO): Promise<Movie[]> {
-    const { title, actor } = filters;
+    const {
+      title,
+      actor,
+      sort = MovieSortField.ID,
+      order = SortOrder.ASC,
+      limit = 10,
+      offset = 0,
+    } = filters;
 
     const where: any = {};
 
@@ -41,10 +50,10 @@ export class MovieService {
     }
 
     if (actor) {
-      where.actors = { [Op.substring]: `%"${actor}%"` };
+      where.actors = { [Op.substring]: `%${actor}%` };
     }
 
-    return Movie.findAll({ where, order: [['title', 'ASC']] });
+    return Movie.findAll({ where, order: [[sort, order]], limit, offset });
   }
 
   public async getMovieById(movieId: string): Promise<Movie> {

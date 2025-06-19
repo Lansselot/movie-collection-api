@@ -1,5 +1,7 @@
 import { checkSchema } from 'express-validator';
 import { MovieFormat } from '../models/enums/movie-format.enum';
+import { MovieSortField } from '../models/enums/movie-sort-format.enum';
+import { SortOrder } from '../models/enums/sort-order.enum';
 
 const actorsIsNotEmptyString = (arr: any) =>
   arr.every((el: any) => typeof el == 'string' && el.length);
@@ -115,5 +117,43 @@ export const movieQueryValidator = checkSchema({
     isString: {
       errorMessage: 'Actor must be string.',
     },
+  },
+  sort: {
+    in: ['query'],
+    optional: true,
+    isIn: {
+      options: [Object.values(MovieSortField)],
+      errorMessage: `Sort must be one of: ${Object.values(MovieSortField).join(
+        ', '
+      )}`,
+    },
+  },
+  order: {
+    in: ['query'],
+    optional: true,
+    isIn: {
+      options: [Object.values(SortOrder)],
+      errorMessage: `Order must be one of: ${Object.values(SortOrder).join(
+        ', '
+      )}`,
+    },
+  },
+  limit: {
+    in: ['query'],
+    optional: true,
+    isInt: {
+      options: { min: 0 },
+      errorMessage: 'Limit must be a non-negative integer.',
+    },
+    toInt: true,
+  },
+  offset: {
+    in: ['query'],
+    optional: true,
+    isInt: {
+      options: { min: 0 },
+      errorMessage: 'Offset must be a non-negative integer.',
+    },
+    toInt: true,
   },
 });
