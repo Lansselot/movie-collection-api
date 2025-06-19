@@ -8,9 +8,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "typeRoots": ["./types"]
+    "emitDecoratorMetadata": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/"],
+  "exclude": ["node_modules", "dist"],
+  "files": ["src/types/index.d.ts"]
 }
