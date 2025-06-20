@@ -6,7 +6,7 @@ export type CreateMovieDTO = {
   title: string;
   year: number;
   format: MovieFormat;
-  actors: string[];
+  actorIds: string[];
 };
 
 export type UpdateMovieDTO = Partial<CreateMovieDTO>;
