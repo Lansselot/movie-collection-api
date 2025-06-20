@@ -15,6 +15,8 @@ import { MovieFormat } from './enums/movie-format.enum';
 import { User } from './user.model';
 import { UUIDV4 } from 'sequelize';
 import { UserMovie } from './user-movie.model';
+import { Actor } from './actor.model';
+import { MovieActor } from './movie-actor.model';
 
 @Table({ modelName: 'Movies' })
 export class Movie extends Model {
@@ -35,11 +37,11 @@ export class Movie extends Model {
   @Column({ type: DataType.ENUM(...Object.values(MovieFormat)) })
   format!: MovieFormat;
 
-  @Column(DataType.JSON)
-  actors!: string[];
-
   @BelongsToMany(() => User, () => UserMovie)
   users!: User[];
+
+  @BelongsToMany(() => Actor, () => MovieActor)
+  actors!: Actor[];
 
   @CreatedAt
   creationDate!: Date;
