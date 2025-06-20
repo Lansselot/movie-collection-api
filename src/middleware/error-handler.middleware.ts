@@ -16,5 +16,10 @@ export function errorHandler(
     return;
   }
 
+  if (err instanceof SyntaxError) {
+    res.status(400).json({ error: 'Invalid JSON' });
+    return;
+  }
+
   res.status(500).json({ error: 'Internal Server Error ' });
 }
