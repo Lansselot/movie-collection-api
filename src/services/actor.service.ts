@@ -56,4 +56,13 @@ export class ActorService {
 
     return actor;
   }
+
+  public async getOrCreateByName(name: string): Promise<Actor> {
+    const [actor] = await Actor.findOrCreate({
+      where: { name },
+      defaults: { name },
+    });
+
+    return actor;
+  }
 }

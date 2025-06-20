@@ -10,19 +10,21 @@ import { Op, Sequelize } from 'sequelize';
 import { MovieSortField } from '../models/enums/movie-sort-format.enum';
 import { SortOrder } from '../models/enums/sort-order.enum';
 import { Actor } from '../models/actor.model';
+import { actorService } from '.';
 
 export class MovieService {
   public async createMovie(data: CreateMovieDTO): Promise<Movie> {
-    const { actorIds, ...movieData } = data;
-
-    console.log(`data = ${JSON.stringify(data)}`);
+    const { actors, ...movieData } = data;
 
     const movie = await Movie.create(movieData);
-    const actors = await Actor.findAll({
-      where: { id: actorIds },
-    });
 
-    await movie.$set('actors', actors);
+    const foundedActors: Actor[] = [];
+    for (const name of actors) {
+      const actor = await actorService.getOrCreateByName(name);
+      foundedActors.push(actor);
+    }
+
+    await movie.$set('actors', foundedActors);
 
     return this.getMovieById(movie.id);
   }
@@ -41,15 +43,17 @@ export class MovieService {
     const movie = await Movie.findByPk(movieId);
     if (!movie) throw Boom.notFound('Movie not found');
 
-    const { actorIds, ...movieData } = data;
+    const { actors, ...movieData } = data;
     await movie.update(movieData);
 
-    if (actorIds) {
-      const actors = await Actor.findAll({
-        where: { id: { [Op.in]: actorIds } },
-      });
+    if (actors) {
+      const foundedActors: Actor[] = [];
+      for (const name of actors) {
+        const actor = await actorService.getOrCreateByName(name);
+        foundedActors.push(actor);
+      }
 
-      await movie.$set('actors', actors);
+      await movie.$set('actors', foundedActors);
     }
 
     return this.getMovieById(movie.id);

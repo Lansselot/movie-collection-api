@@ -4,8 +4,8 @@ import { MovieSortField } from '../models/enums/movie-sort-format.enum';
 import { SortOrder } from '../models/enums/sort-order.enum';
 import { isUUID } from 'validator';
 
-const actorsIsNotEmptyIDs = (arr: any) =>
-  arr.every((el: any) => typeof el == 'string' && isUUID(el));
+const actorsIsNotEmptyString = (arr: any) =>
+  arr.every((el: any) => typeof el == 'string' && el.length);
 
 export const createMovieValidator = checkSchema({
   title: {
@@ -33,14 +33,14 @@ export const createMovieValidator = checkSchema({
       )}`,
     },
   },
-  actorIds: {
+  actors: {
     isArray: {
       options: { min: 1 },
-      errorMessage: 'ActorIds must be not empty array of IDs.',
+      errorMessage: 'Actors must be not empty array.',
     },
     custom: {
-      options: actorsIsNotEmptyIDs,
-      errorMessage: 'Each actorID must be valid.',
+      options: actorsIsNotEmptyString,
+      errorMessage: 'Each actor must be not empty string.',
     },
   },
 });
@@ -76,15 +76,15 @@ export const patchMovieValidation = checkSchema({
       )}`,
     },
   },
-  actorIds: {
+  actors: {
     optional: true,
     isArray: {
       options: { min: 1 },
-      errorMessage: 'Actors must be not empty array of IDs.',
+      errorMessage: 'Actors must be not empty array.',
     },
     custom: {
-      options: actorsIsNotEmptyIDs,
-      errorMessage: 'Each actorID must be valid.',
+      options: actorsIsNotEmptyString,
+      errorMessage: 'Each actor must be not empty string.',
     },
   },
 });
