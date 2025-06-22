@@ -7,7 +7,7 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.log(err);
+  //console.log(err);
 
   if (Boom.isBoom(err)) {
     res

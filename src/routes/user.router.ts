@@ -10,35 +10,23 @@ import { movieIdParamValidator } from '../validators/movie.validator';
 
 const router = Router();
 
-router.get('/me', authenticate, userController.getUserById);
-router.put(
-  '/me',
-  putUserValidator,
-  validate,
-  authenticate,
-  userController.updateUser
-);
-router.patch(
-  '/me',
-  patchUserValidator,
-  validate,
-  authenticate,
-  userController.updateUser
-);
-router.delete('/me', authenticate, userController.deleteUser);
-router.get('/movies', authenticate, userController.getUserMovies);
+router.use(authenticate);
+
+router.get('/me', userController.getUserById);
+router.put('/me', putUserValidator, validate, userController.updateUser);
+router.patch('/me', patchUserValidator, validate, userController.updateUser);
+router.delete('/me', userController.deleteUser);
+router.get('/movies', userController.getUserMovies);
 router.post(
   'movies/:movieId',
   movieIdParamValidator,
   validate,
-  authenticate,
   userController.addMovie
 );
 router.delete(
   'movies/:movieId',
   movieIdParamValidator,
   validate,
-  authenticate,
   userController.removeMovie
 );
 

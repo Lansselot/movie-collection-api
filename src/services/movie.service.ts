@@ -1,5 +1,4 @@
 import Boom from '@hapi/boom';
-import { MovieFormat } from '../models/enums/movie-format.enum';
 import { Movie } from '../models/movie.model';
 import {
   CreateMovieDTO,
@@ -11,12 +10,24 @@ import { MovieSortField } from '../models/enums/movie-sort-format.enum';
 import { SortOrder } from '../models/enums/sort-order.enum';
 import { Actor } from '../models/actor.model';
 import { actorService } from '.';
+import { createMovieValidator } from '../validators/movie.validator';
+import { validationResult } from 'express-validator';
 
 export class MovieService {
-  public async createMovie(data: CreateMovieDTO): Promise<Movie> {
-    const { actors, ...movieData } = data;
+  async createMovie(data: CreateMovieDTO): Promise<Movie> {
+    const { title, year, format, actors } = data;
 
-    const movie = await Movie.create(movieData);
+    const existingMovie = await Movie.findOne({
+      where: { title, year, format },
+    });
+
+    if (existingMovie) {
+      throw Boom.conflict(
+        'Movie with the same title, year and format already exists'
+      );
+    }
+
+    const movie = await Movie.create({ title, year, format });
 
     const foundedActors: Actor[] = [];
     for (const name of actors) {
@@ -29,17 +40,14 @@ export class MovieService {
     return this.getMovieById(movie.id);
   }
 
-  public async deleteMovieById(movieId: string): Promise<{ success: true }> {
+  async deleteMovieById(movieId: string): Promise<{ success: true }> {
     const rowsDeleted = await Movie.destroy({ where: { id: movieId } });
     if (!rowsDeleted) throw Boom.notFound('Movie not found');
 
     return { success: true };
   }
 
-  public async updateMovieById(
-    movieId: string,
-    data: UpdateMovieDTO
-  ): Promise<Movie> {
+  async updateMovieById(movieId: string, data: UpdateMovieDTO): Promise<Movie> {
     const movie = await Movie.findByPk(movieId);
     if (!movie) throw Boom.notFound('Movie not found');
 
@@ -59,13 +67,13 @@ export class MovieService {
     return this.getMovieById(movie.id);
   }
 
-  public async getMovies(filters: MovieFiltersDTO): Promise<Movie[]> {
+  async getMovies(filters: MovieFiltersDTO): Promise<Movie[]> {
     const {
       title,
       actor,
       sort = MovieSortField.ID,
       order = SortOrder.ASC,
-      limit = 10,
+      limit = 100,
       offset = 0,
     } = filters;
 
@@ -100,7 +108,7 @@ export class MovieService {
     });
   }
 
-  public async getMovieById(movieId: string): Promise<Movie> {
+  async getMovieById(movieId: string): Promise<Movie> {
     const movie = await Movie.findByPk(movieId, {
       include: [{ model: Actor, through: { attributes: [] } }],
     });

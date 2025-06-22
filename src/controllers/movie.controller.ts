@@ -8,6 +8,7 @@ import {
 } from '../types/dto/movie.dto';
 import { MovieSortField } from '../models/enums/movie-sort-format.enum';
 import { SortOrder } from '../models/enums/sort-order.enum';
+import fs from 'fs/promises';
 
 export class MovieController {
   async createMovie(
@@ -68,17 +69,12 @@ export class MovieController {
       const { title, actor, sort, order, limit, offset } = req.query;
 
       const filters: MovieFiltersDTO = {
-        title: typeof title === 'string' ? title : undefined,
-        actor: typeof actor === 'string' ? actor : undefined,
-        sort: Object.values(MovieSortField).includes(sort as MovieSortField)
-          ? (sort as MovieSortField)
-          : undefined,
-        order: Object.values(SortOrder).includes(order as SortOrder)
-          ? (order as SortOrder)
-          : undefined,
-        limit: limit !== undefined ? parseInt(limit as string, 10) : undefined,
-        offset:
-          offset !== undefined ? parseInt(offset as string, 10) : undefined,
+        title: title as string,
+        actor: actor as string,
+        sort: sort as MovieSortField,
+        order: order as SortOrder,
+        limit: limit ? parseInt(limit as string) : undefined,
+        offset: offset ? parseInt(offset as string) : undefined,
       };
 
       const movies = await movieService.getMovies(filters);
@@ -100,6 +96,39 @@ export class MovieController {
       const movie = await movieService.getMovieById(movieId);
 
       res.json(movie);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async importMoviesFromText(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.file) throw Boom.notFound('Movie not found');
+
+      const result = await movieService.importMoviesFromText(req.file.path);
+
+      await fs.unlink(req.file.path);
+
+      res.json(result);
+    } catch (error) {
+      if (req.file?.path) {
+        await fs.unlink(req.file.path);
+      }
+      next(error);
+    }
+  }
+
+  async showUploadForm(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      res.sendFile('upload.html', { root: 'src/views' });
     } catch (error) {
       next(error);
     }

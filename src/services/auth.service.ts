@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class AuthService {
-  public async login(email: string, password: string): Promise<string> {
+  async login(email: string, password: string): Promise<string> {
     const user = await userService.getUserByEmail(email);
     if (!user) throw Boom.unauthorized('Invalid email or password');
 

@@ -5,7 +5,7 @@ import { CreateUserDTO, UpdateUserDTO } from '../types/dto/user.dto';
 import bcrypt from 'bcryptjs';
 
 export class UserService {
-  public async createUser(data: CreateUserDTO): Promise<User> {
+  async createUser(data: CreateUserDTO): Promise<User> {
     const { name, email, password } = data;
 
     const existingUser = await this.getUserByEmail(email);
@@ -17,17 +17,14 @@ export class UserService {
     return User.create({ name, email, passwordHash });
   }
 
-  public async deleteUserById(userId: string): Promise<{ success: true }> {
+  async deleteUserById(userId: string): Promise<{ success: true }> {
     const rowsDeleted = await User.destroy({ where: { id: userId } });
     if (!rowsDeleted) throw Boom.notFound('User not found');
 
     return { success: true };
   }
 
-  public async updateUserById(
-    userId: string,
-    data: UpdateUserDTO
-  ): Promise<User> {
+  async updateUserById(userId: string, data: UpdateUserDTO): Promise<User> {
     const user = await User.findByPk(userId);
     if (!user) throw Boom.notFound('User not found');
 
@@ -41,14 +38,14 @@ export class UserService {
     return user;
   }
 
-  public async getUserById(userId: string): Promise<User> {
+  async getUserById(userId: string): Promise<User> {
     const user = await User.findByPk(userId);
     if (!user) throw Boom.notFound('User not found');
 
     return user;
   }
 
-  public async getUserByEmail(userEmail: string): Promise<User | null> {
+  async getUserByEmail(userEmail: string): Promise<User | null> {
     const user = await User.findOne({
       where: { email: userEmail },
     });
@@ -56,7 +53,7 @@ export class UserService {
     return user;
   }
 
-  public async addMovieToUser(
+  async addMovieToUser(
     userId: string,
     movieId: string
   ): Promise<{ success: true }> {
@@ -73,7 +70,7 @@ export class UserService {
     return { success: true };
   }
 
-  public async removeMovieFromUser(
+  async removeMovieFromUser(
     userId: string,
     movieId: string
   ): Promise<{ success: true }> {
@@ -90,7 +87,7 @@ export class UserService {
     return { success: true };
   }
 
-  public async getUserMovies(userId: string): Promise<Movie[]> {
+  async getUserMovies(userId: string): Promise<Movie[]> {
     const user = await User.findByPk(userId, {
       include: [
         {

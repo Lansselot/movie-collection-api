@@ -67,16 +67,11 @@ export class ActorController {
       const { name, sort, order, limit, offset } = req.query;
 
       const filters: ActorFiltersDTO = {
-        name: typeof name === 'string' ? name : undefined,
-        sort: Object.values(ActorSortField).includes(sort as ActorSortField)
-          ? (sort as ActorSortField)
-          : undefined,
-        order: Object.values(SortOrder).includes(order as SortOrder)
-          ? (order as SortOrder)
-          : undefined,
-        limit: limit !== undefined ? parseInt(limit as string, 10) : undefined,
-        offset:
-          offset !== undefined ? parseInt(offset as string, 10) : undefined,
+        name: name as string,
+        sort: sort as ActorSortField,
+        order: order as SortOrder,
+        limit: limit ? parseInt(limit as string) : undefined,
+        offset: offset ? parseInt(offset as string) : undefined,
       };
 
       const actors = await actorService.getActors(filters);
