@@ -8,8 +8,11 @@ import {
 } from '../validators/actor.validator';
 import { validate } from '../middleware/validate.middleware';
 import { actorController } from '../controllers';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
+
+router.use(authenticate);
 
 router.get('/', actorQueryValidator, validate, actorController.getActors);
 router.post('/', createActorValidator, validate, actorController.createActor);

@@ -157,3 +157,14 @@ export const movieQueryValidator = checkSchema({
     toInt: true,
   },
 });
+
+export const moviesFileValidator = checkSchema({
+  moviesFile: {
+    custom: {
+      options: (value, { req }) =>
+        req.file && req.file.mimetype == 'text/plain',
+
+      errorMessage: 'Text file must be valid.',
+    },
+  },
+});

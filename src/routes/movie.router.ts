@@ -4,19 +4,44 @@ import {
   createMovieValidator,
   movieIdParamValidator,
   movieQueryValidator,
+  moviesFileValidator,
   patchMovieValidation,
   putMovieValidation,
 } from '../validators/movie.validator';
 import { validate } from '../middleware/validate.middleware';
+import multer from 'multer';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
+const upload = multer({ dest: 'uploads/' });
 
-router.get('/', movieQueryValidator, validate, movieController.getMovies);
-router.post('/', createMovieValidator, validate, movieController.createMovie);
+router.get(
+  '/',
+  movieQueryValidator,
+  validate,
+  authenticate,
+  movieController.getMovies
+);
+router.post(
+  '/',
+  createMovieValidator,
+  validate,
+  authenticate,
+  movieController.createMovie
+);
+router.get('/upload', movieController.showUploadForm);
+router.post(
+  '/upload',
+  upload.single('moviesFile'),
+  moviesFileValidator,
+  validate,
+  movieController.importMoviesFromText
+);
 router.get(
   '/:movieId',
   movieIdParamValidator,
   validate,
+  authenticate,
   movieController.getMovieById
 );
 router.put(
@@ -24,6 +49,7 @@ router.put(
   movieIdParamValidator,
   putMovieValidation,
   validate,
+  authenticate,
   movieController.updateMovie
 );
 router.patch(
@@ -31,12 +57,14 @@ router.patch(
   movieIdParamValidator,
   patchMovieValidation,
   validate,
+  authenticate,
   movieController.updateMovie
 );
 router.delete(
   '/:movieId',
   movieIdParamValidator,
   validate,
+  authenticate,
   movieController.deleteMovie
 );
 

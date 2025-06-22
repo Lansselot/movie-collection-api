@@ -12,6 +12,7 @@ import { Actor } from '../models/actor.model';
 import { actorService } from '.';
 import { createMovieValidator } from '../validators/movie.validator';
 import { validationResult } from 'express-validator';
+import fs from 'fs/promises';
 
 export class MovieService {
   async createMovie(data: CreateMovieDTO): Promise<Movie> {
@@ -115,5 +116,82 @@ export class MovieService {
     if (!movie) throw Boom.notFound('Movie not found');
 
     return movie;
+  }
+
+  private namings: Record<string, keyof CreateMovieDTO> = {
+    Title: 'title',
+    'Release Year': 'year',
+    Format: 'format',
+    Stars: 'actors',
+  };
+
+  private async parseMovies(content: string): Promise<CreateMovieDTO[]> {
+    const result: CreateMovieDTO[] = [];
+    const movieTexts = content.split('\n\n');
+
+    for (const movieText of movieTexts) {
+      const movie: Partial<CreateMovieDTO> = {};
+
+      const rows = movieText.split('\n');
+      for (const row of rows) {
+        const splitRow = row.split(': ');
+        if (splitRow.length < 2) continue;
+
+        const key = this.namings[splitRow[0].trim()];
+        if (!key) continue;
+
+        let value;
+        if (key == 'actors') value = splitRow[1].split(', ');
+        else value = splitRow[1].trim();
+        if (!value) continue;
+
+        movie[key] = value as any;
+      }
+
+      if (
+        !movie.title ||
+        !movie.year ||
+        !movie.format ||
+        !movie.actors ||
+        !movie.actors.length
+      )
+        continue;
+
+      const movieObj = { body: movie };
+
+      for (const validator of createMovieValidator) {
+        await validator.run(movieObj);
+      }
+      const errors = validationResult(movieObj);
+      if (!errors.isEmpty()) {
+        continue;
+      }
+
+      result.push(movie as CreateMovieDTO);
+    }
+
+    return result;
+  }
+
+  async importMoviesFromText(
+    filepath: string
+  ): Promise<{ imported: number; errors: Error[] }> {
+    const content = await fs.readFile(filepath, 'utf-8');
+
+    const parsedMovies = await this.parseMovies(content);
+
+    let imported = 0;
+    const errors: Error[] = [];
+
+    for (const movie of parsedMovies) {
+      try {
+        await this.createMovie(movie);
+        ++imported;
+      } catch (error: any) {
+        errors.push(error);
+      }
+    }
+
+    return { imported, errors };
   }
 }
