@@ -106,21 +106,4 @@ export class UserController {
       next(error);
     }
   }
-
-  async getUserMovies(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const tokenUserId = req.user!.userId;
-      if (!tokenUserId) throw Boom.unauthorized();
-
-      const movies = await userService.getUserMovies(tokenUserId);
-
-      res.json(movies);
-    } catch (error) {
-      next(error);
-    }
-  }
 }

@@ -16,7 +16,6 @@ router.get('/me', userController.getUserById);
 router.put('/me', putUserValidator, validate, userController.updateUser);
 router.patch('/me', patchUserValidator, validate, userController.updateUser);
 router.delete('/me', userController.deleteUser);
-router.get('/movies', userController.getUserMovies);
 router.post(
   'movies/:movieId',
   movieIdParamValidator,

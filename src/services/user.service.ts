@@ -86,19 +86,4 @@ export class UserService {
     await user.$remove('movies', movie);
     return { success: true };
   }
-
-  async getUserMovies(userId: string): Promise<Movie[]> {
-    const user = await User.findByPk(userId, {
-      include: [
-        {
-          model: Movie,
-          order: [['UserMovies', 'createdAt', 'ASC']],
-        },
-      ],
-    });
-
-    if (!user) throw Boom.notFound('User not found');
-
-    return user.movies;
-  }
 }
