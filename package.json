@@ -9,7 +9,10 @@
     "docker:build": "docker build -t movie-collection-app .",
     "docker:run": "docker run -d --name movies -p 3000:3000 -e APP_PORT=3000 movie-collection-app",
     "docker:stop": "docker stop movies",
-    "docker:remove": "docker rm -f movies"
+    "docker:remove": "docker rm -f movies",
+    "migrate": "sequelize db:migrate",
+    "migrate:undo": "sequelize db:migrate:undo",
+    "start:migrate": "sequelize db:migrate && yarn start"
   },
   "repository": "https://github.com/Lansselot/movie-collection-api",
   "author": "lansselot <pozharov2003@gmail.com>",
