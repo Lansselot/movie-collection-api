@@ -125,8 +125,11 @@ export class MovieService {
     Stars: 'actors',
   };
 
-  private async parseMovies(content: string): Promise<CreateMovieDTO[]> {
-    const result: CreateMovieDTO[] = [];
+  private async parseMovies(
+    content: string
+  ): Promise<{ movies: CreateMovieDTO[]; errors: Error[] }> {
+    const movies: CreateMovieDTO[] = [];
+    const errors: Error[] = [];
     const movieTexts = content.split('\n\n');
 
     for (const movieText of movieTexts) {
@@ -162,26 +165,34 @@ export class MovieService {
       for (const validator of createMovieValidator) {
         await validator.run(movieObj);
       }
-      const errors = validationResult(movieObj);
-      if (!errors.isEmpty()) {
+      const validationErrors = validationResult(movieObj);
+      if (!validationErrors.isEmpty()) {
+        errors.push(
+          Boom.badRequest('Validation failed', {
+            errors: validationErrors.array(),
+          })
+        );
         continue;
       }
 
-      result.push(movie as CreateMovieDTO);
+      movies.push(movie as CreateMovieDTO);
     }
 
-    return result;
+    return { movies, errors };
   }
 
   async importMoviesFromText(
     filepath: string
   ): Promise<{ imported: number; errors: Error[] }> {
     const content = await fs.readFile(filepath, 'utf-8');
+    const errors: Error[] = [];
 
-    const parsedMovies = await this.parseMovies(content);
+    const { movies: parsedMovies, errors: parsedErrors } =
+      await this.parseMovies(content);
+
+    errors.push(...parsedErrors);
 
     let imported = 0;
-    const errors: Error[] = [];
 
     for (const movie of parsedMovies) {
       try {
