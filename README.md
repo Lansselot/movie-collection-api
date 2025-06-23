@@ -33,14 +33,14 @@ You can explore and test the API via Postman: [Postman Collection](https://www.p
 
 ## Architecture
 
-`src/`
---- `controllers/` -- Handle incoming HTTP requests and responses
---- `db/` -- Sequelize initialization, migrations, and seeders
---- `middlewares/` -- Auth middleware, error handling, validate etc.
---- `routes/` -- Define API endpoints and route them to controllers
---- `services/` -- Business logic, called by controllers
---- `types/` -- Types definitions and interfaces
---- `validators/` -- Data validation schemas
---- `views/` -- HTML files for response
---- `app.ts` -- Application setup and middleware registration
+`src/`  
+--- `controllers/` -- Handle incoming HTTP requests and responses  
+--- `db/` -- Sequelize initialization, migrations, and seeders  
+--- `middlewares/` -- Auth middleware, error handling, validate etc.  
+--- `routes/` -- Define API endpoints and route them to controllers  
+--- `services/` -- Business logic, called by controllers  
+--- `types/` -- Types definitions and interfaces  
+--- `validators/` -- Data validation schemas  
+--- `views/` -- HTML files for response  
+--- `app.ts` -- Application setup and middleware registration  
 --- `server.ts` -- Server start and listening logic
