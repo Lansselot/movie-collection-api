@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
-import { Movie } from '../models/movie.model';
-import { User } from '../models/user.model';
+import { Movie } from '../db/models/movie.model';
+import { User } from '../db/models/user.model';
 import { CreateUserDTO, UpdateUserDTO } from '../types/dto/user.dto';
 import bcrypt from 'bcryptjs';
 

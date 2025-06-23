@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { Movie } from '../models/movie.model';
+import { Movie } from '../db/models/movie.model';
 import {
   CreateMovieDTO,
   MovieFiltersDTO,
@@ -8,7 +8,7 @@ import {
 import { Op, Sequelize } from 'sequelize';
 import { MovieSortField } from '../models/enums/movie-sort-format.enum';
 import { SortOrder } from '../models/enums/sort-order.enum';
-import { Actor } from '../models/actor.model';
+import { Actor } from '../db/models/actor.model';
 import { actorService } from '.';
 import { createMovieValidator } from '../validators/movie.validator';
 import { validationResult } from 'express-validator';

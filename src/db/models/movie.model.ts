@@ -11,10 +11,9 @@ import {
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
-import { MovieFormat } from './enums/movie-format.enum';
+import { MovieFormat } from '../../types/enums/movie-format.enum';
 import { User } from './user.model';
 import { UUIDV4 } from 'sequelize';
-import { UserMovie } from './user-movie.model';
 import { Actor } from './actor.model';
 import { MovieActor } from './movie-actor.model';
 
@@ -37,15 +36,12 @@ export class Movie extends Model {
   @Column({ type: DataType.ENUM(...Object.values(MovieFormat)) })
   format!: MovieFormat;
 
-  @BelongsToMany(() => User, () => UserMovie)
-  users!: User[];
-
   @BelongsToMany(() => Actor, () => MovieActor)
   actors!: Actor[];
 
   @CreatedAt
-  creationDate!: Date;
+  createdAt!: Date;
 
   @UpdatedAt
-  updatedOn!: Date;
+  updatedAt!: Date;
 }

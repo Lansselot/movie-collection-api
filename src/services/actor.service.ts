@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { Actor } from '../models/actor.model';
+import { Actor } from '../db/models/actor.model';
 import {
   ActorFiltersDTO,
   CreateActorDTO,

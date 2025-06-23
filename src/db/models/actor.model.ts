@@ -3,22 +3,19 @@ import {
   Column,
   Model,
   PrimaryKey,
-  AllowNull,
   CreatedAt,
   UpdatedAt,
   BelongsToMany,
   Default,
   DataType,
-  Unique,
   NotEmpty,
-  IsEmail,
 } from 'sequelize-typescript';
 import { Movie } from './movie.model';
 import { UUIDV4 } from 'sequelize';
-import { UserMovie } from './user-movie.model';
+import { MovieActor } from './movie-actor.model';
 
-@Table({ modelName: 'Users' })
-export class User extends Model {
+@Table({ modelName: 'Actors' })
+export class Actor extends Model {
   @PrimaryKey
   @Default(UUIDV4)
   @Column(DataType.UUID)
@@ -28,22 +25,12 @@ export class User extends Model {
   @Column
   name!: string;
 
-  @NotEmpty
-  @IsEmail
-  @Unique
-  @Column
-  email!: string;
-
-  @NotEmpty
-  @Column
-  passwordHash!: string;
-
-  @BelongsToMany(() => Movie, () => UserMovie)
+  @BelongsToMany(() => Movie, () => MovieActor)
   movies!: Movie[];
 
   @CreatedAt
-  creationDate!: Date;
+  createdAt!: Date;
 
   @UpdatedAt
-  updatedOn!: Date;
+  updatedAt!: Date;
 }
