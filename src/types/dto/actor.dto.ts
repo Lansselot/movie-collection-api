@@ -1,5 +1,5 @@
-import { ActorSortField } from '../../models/enums/actor-sort-format.enum';
-import { SortOrder } from '../../models/enums/sort-order.enum';
+import { ActorSortField } from '../enums/actor-sort-format.enum';
+import { SortOrder } from '../enums/sort-order.enum';
 
 export type CreateActorDTO = {
   name: string;

@@ -5,8 +5,8 @@ import {
   CreateActorDTO,
   UpdateActorDTO,
 } from '../types/dto/actor.dto';
-import { ActorSortField } from '../models/enums/actor-sort-format.enum';
-import { SortOrder } from '../models/enums/sort-order.enum';
+import { ActorSortField } from '../types/enums/actor-sort-format.enum';
+import { SortOrder } from '../types/enums/sort-order.enum';
 import { Op } from 'sequelize';
 
 export class ActorService {

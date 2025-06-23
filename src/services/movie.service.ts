@@ -6,8 +6,8 @@ import {
   UpdateMovieDTO,
 } from '../types/dto/movie.dto';
 import { Op, Sequelize } from 'sequelize';
-import { MovieSortField } from '../models/enums/movie-sort-format.enum';
-import { SortOrder } from '../models/enums/sort-order.enum';
+import { MovieSortField } from '../types/enums/movie-sort-format.enum';
+import { SortOrder } from '../types/enums/sort-order.enum';
 import { Actor } from '../db/models/actor.model';
 import { actorService } from '.';
 import { createMovieValidator } from '../validators/movie.validator';

@@ -1,6 +1,6 @@
-import { MovieFormat } from '../../models/enums/movie-format.enum';
-import { MovieSortField } from '../../models/enums/movie-sort-format.enum';
-import { SortOrder } from '../../models/enums/sort-order.enum';
+import { MovieFormat } from '../enums/movie-format.enum';
+import { MovieSortField } from '../enums/movie-sort-format.enum';
+import { SortOrder } from '../enums/sort-order.enum';
 
 export type CreateMovieDTO = {
   title: string;

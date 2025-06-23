@@ -1,6 +1,6 @@
 import { checkSchema } from 'express-validator';
-import { SortOrder } from '../models/enums/sort-order.enum';
-import { ActorSortField } from '../models/enums/actor-sort-format.enum';
+import { SortOrder } from '../types/enums/sort-order.enum';
+import { ActorSortField } from '../types/enums/actor-sort-format.enum';
 
 export const createActorValidator = checkSchema({
   name: {

@@ -6,8 +6,8 @@ import {
   MovieFiltersDTO,
   UpdateMovieDTO,
 } from '../types/dto/movie.dto';
-import { MovieSortField } from '../models/enums/movie-sort-format.enum';
-import { SortOrder } from '../models/enums/sort-order.enum';
+import { MovieSortField } from '../types/enums/movie-sort-format.enum';
+import { SortOrder } from '../types/enums/sort-order.enum';
 import fs from 'fs/promises';
 
 export class MovieController {
