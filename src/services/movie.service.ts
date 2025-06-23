@@ -13,6 +13,7 @@ import { actorService } from '.';
 import { createMovieValidator } from '../validators/movie.validator';
 import { validationResult } from 'express-validator';
 import fs from 'fs/promises';
+import { sequelize } from '../sequelize';
 
 export class MovieService {
   async createMovie(data: CreateMovieDTO): Promise<Movie> {
@@ -28,17 +29,24 @@ export class MovieService {
       );
     }
 
-    const movie = await Movie.create({ title, year, format });
+    const result = await sequelize.transaction(async (t) => {
+      const movie = await Movie.create(
+        { title, year, format },
+        { transaction: t }
+      );
 
-    const foundedActors: Actor[] = [];
-    for (const name of actors) {
-      const actor = await actorService.getOrCreateByName(name);
-      foundedActors.push(actor);
-    }
+      const foundActors: Actor[] = [];
+      for (const name of actors) {
+        const actor = await actorService.getOrCreateByName(name, t);
+        foundActors.push(actor);
+      }
 
-    await movie.$set('actors', foundedActors);
+      await movie.$set('actors', foundActors, { transaction: t });
 
-    return this.getMovieById(movie.id);
+      return movie.id;
+    });
+
+    return this.getMovieById(result);
   }
 
   async deleteMovieById(movieId: string): Promise<{ success: true }> {

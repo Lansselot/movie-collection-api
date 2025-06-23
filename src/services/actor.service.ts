@@ -7,7 +7,7 @@ import {
 } from '../types/dto/actor.dto';
 import { ActorSortField } from '../types/enums/actor-sort-format.enum';
 import { SortOrder } from '../types/enums/sort-order.enum';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 export class ActorService {
   async createActor(data: CreateActorDTO): Promise<Actor> {
@@ -54,11 +54,11 @@ export class ActorService {
     return actor;
   }
 
-  async getOrCreateByName(name: string): Promise<Actor> {
-    const [actor] = await Actor.findOrCreate({
-      where: { name },
-      defaults: { name },
-    });
+  async getOrCreateByName(name: string, t?: Transaction): Promise<Actor> {
+    let actor = await Actor.findOne({ where: { name } });
+    if (!actor) {
+      actor = await Actor.create({ name }, { transaction: t });
+    }
 
     return actor;
   }
