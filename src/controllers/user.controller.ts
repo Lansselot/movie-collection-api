@@ -15,7 +15,13 @@ export class UserController {
 
       const user = await userService.getUserById(tokenUserId);
 
-      res.json(user);
+      res.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      });
     } catch (error) {
       next(error);
     }
@@ -34,7 +40,13 @@ export class UserController {
 
       const updatedUser = await userService.updateUserById(tokenUserId, data);
 
-      res.json(updatedUser);
+      res.json({
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+      });
     } catch (error) {
       next(error);
     }

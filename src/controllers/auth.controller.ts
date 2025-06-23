@@ -14,7 +14,13 @@ export class AuthController {
       const newUser = await userService.createUser(body);
       res
         .status(201)
-        .json({ id: newUser.id, name: newUser.name, email: newUser.email });
+        .json({
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          createdAt: newUser.createdAt,
+          updatedAt: newUser.updatedAt,
+        });
     } catch (error) {
       next(error);
     }
