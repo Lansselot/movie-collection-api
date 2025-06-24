@@ -34,7 +34,7 @@ export class ActorService {
       name,
       sort = ActorSortField.ID,
       order = SortOrder.ASC,
-      limit = 100,
+      limit,
       offset = 0,
     } = filters;
 

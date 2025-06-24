@@ -82,7 +82,7 @@ export class MovieService {
       actor,
       sort = MovieSortField.ID,
       order = SortOrder.ASC,
-      limit = 100,
+      limit,
       offset = 0,
     } = filters;
 
