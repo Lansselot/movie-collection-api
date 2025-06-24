@@ -10,8 +10,8 @@ import { SortOrder } from '../types/enums/sort-order.enum';
 import { Op, Transaction } from 'sequelize';
 
 export class ActorService {
-  async createActor(data: CreateActorDTO): Promise<Actor> {
-    return Actor.create(data);
+  async createActor({ name }: CreateActorDTO): Promise<Actor> {
+    return this.getOrCreateByName(name);
   }
 
   async deleteActorById(actorId: string): Promise<{ success: true }> {
