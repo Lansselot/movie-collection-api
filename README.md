@@ -16,7 +16,7 @@ Movie Collection App is a RESTful API service that allows users to save informat
 ## Run the application using Docker:
 
 ```
-docker run --name movies -p 8000:8050 -e APP_PORT=8050 lanssel/movie-collection-app:latest
+docker run --pull always --name movies -p 8000:8050 -e APP_PORT=8050 lanssel/movie-collection-app:latest
 ```
 
 `APP_PORT` - The port the app will listen on inside the container (default: 3000).
