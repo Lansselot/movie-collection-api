@@ -2,6 +2,7 @@ import { body, checkSchema, param } from 'express-validator';
 
 export const putUserValidator = checkSchema({
   name: {
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },
@@ -14,7 +15,8 @@ export const putUserValidator = checkSchema({
     notEmpty: {
       errorMessage: 'Email must not be empty.',
     },
-    isEmail: {
+    matches: {
+      options: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g],
       errorMessage: 'Email must be valid.',
     },
   },
@@ -23,6 +25,7 @@ export const putUserValidator = checkSchema({
 export const patchUserValidator = checkSchema({
   name: {
     optional: true,
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },
@@ -36,18 +39,8 @@ export const patchUserValidator = checkSchema({
     notEmpty: {
       errorMessage: 'Email must not be empty.',
     },
-    isEmail: {
-      errorMessage: 'Email must be valid.',
-    },
-  },
-});
-
-export const emailUserValidator = checkSchema({
-  email: {
-    notEmpty: {
-      errorMessage: 'Email must not be empty.',
-    },
-    isEmail: {
+    matches: {
+      options: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g],
       errorMessage: 'Email must be valid.',
     },
   },

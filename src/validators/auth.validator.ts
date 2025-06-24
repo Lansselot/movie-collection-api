@@ -14,7 +14,8 @@ export const registerValidator = checkSchema({
     notEmpty: {
       errorMessage: 'Email must not be empty.',
     },
-    isEmail: {
+    matches: {
+      options: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g],
       errorMessage: 'Email must be valid.',
     },
   },
@@ -25,6 +26,11 @@ export const registerValidator = checkSchema({
     isLength: {
       options: { min: 6 },
       errorMessage: 'Password must be at least 6 characters long.',
+    },
+    matches: {
+      options: [/^[\d\w!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$/],
+      errorMessage:
+        'Password must contain only letters (a-z), numbers (0-9) and special characters',
     },
   },
 });
@@ -34,7 +40,8 @@ export const loginValidator = checkSchema({
     notEmpty: {
       errorMessage: 'Email must not be empty.',
     },
-    isEmail: {
+    matches: {
+      options: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g],
       errorMessage: 'Email must be valid.',
     },
   },
@@ -45,6 +52,11 @@ export const loginValidator = checkSchema({
     isLength: {
       options: { min: 6 },
       errorMessage: 'Password must be at least 6 characters long.',
+    },
+    matches: {
+      options: [/^[\d\w!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]+$/],
+      errorMessage:
+        'Password must contain only letters (a-z), numbers (0-9) and special characters',
     },
   },
 });

@@ -4,11 +4,17 @@ import { ActorSortField } from '../types/enums/actor-sort-format.enum';
 
 export const createActorValidator = checkSchema({
   name: {
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },
     notEmpty: {
       errorMessage: 'Name must not be empty.',
+    },
+    matches: {
+      options: [/^[\p{L}\s\-,.]+$/gu],
+      errorMessage:
+        'Name must contain only letters, spaces and special characters (- , .)',
     },
   },
 });
@@ -18,11 +24,17 @@ export const putActorValidation = createActorValidator;
 export const patchActorValidation = checkSchema({
   name: {
     optional: true,
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },
     notEmpty: {
       errorMessage: 'Name must not be empty.',
+    },
+    matches: {
+      options: [/^[\p{L}\s\-,.]+$/gu],
+      errorMessage:
+        'Name must contain only letters, spaces and special characters (- , .)',
     },
   },
 });
@@ -40,6 +52,7 @@ export const actorQueryValidator = checkSchema({
   name: {
     in: ['query'],
     optional: true,
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },

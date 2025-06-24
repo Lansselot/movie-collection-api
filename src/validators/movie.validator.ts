@@ -4,10 +4,13 @@ import { MovieSortField } from '../types/enums/movie-sort-format.enum';
 import { SortOrder } from '../types/enums/sort-order.enum';
 
 const actorsIsNotEmptyString = (arr: any) =>
-  arr.every((el: any) => typeof el == 'string' && el.length);
+  arr.every((el: any) => typeof el == 'string' && el.trim().length);
+
+const maxYear = new Date().getFullYear();
 
 export const createMovieValidator = checkSchema({
   title: {
+    trim: true,
     isString: {
       errorMessage: 'Title must be string.',
     },
@@ -16,11 +19,12 @@ export const createMovieValidator = checkSchema({
     },
   },
   year: {
+    trim: true,
     notEmpty: {
       errorMessage: 'Year must not be empty.',
     },
     isInt: {
-      options: { min: 1800, max: 2100 },
+      options: { min: 1800, max: maxYear },
       errorMessage: 'Year must be valid.',
     },
   },
@@ -49,6 +53,7 @@ export const putMovieValidation = createMovieValidator;
 export const patchMovieValidation = checkSchema({
   title: {
     optional: true,
+    trim: true,
     isString: {
       errorMessage: 'Title must be string.',
     },
@@ -58,11 +63,12 @@ export const patchMovieValidation = checkSchema({
   },
   year: {
     optional: true,
+    trim: true,
     notEmpty: {
       errorMessage: 'Year must not be empty.',
     },
     isInt: {
-      options: { min: 1800, max: 2100 },
+      options: { min: 1800, max: maxYear },
       errorMessage: 'Year must be valid.',
     },
   },
@@ -101,6 +107,7 @@ export const movieQueryValidator = checkSchema({
   title: {
     in: ['query'],
     optional: true,
+    trim: true,
     isString: {
       errorMessage: 'Title must be string.',
     },
@@ -111,6 +118,7 @@ export const movieQueryValidator = checkSchema({
   actor: {
     in: ['query'],
     optional: true,
+    trim: true,
     notEmpty: {
       errorMessage: 'Actor must not be empty.',
     },
