@@ -44,7 +44,27 @@ export class ActorService {
       where.name = { [Op.substring]: `${name}%` };
     }
 
-    return Actor.findAll({ where, order: [[sort, order]], limit, offset });
+    const actors = await Actor.findAll({
+      where,
+      order: [[sort, order]],
+      limit,
+      offset,
+    });
+
+    if (sort === ActorSortField.NAME) {
+      const sortedMovies = actors.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+
+        return order === SortOrder.ASC
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      });
+
+      return sortedMovies;
+    }
+
+    return actors;
   }
 
   async getActorById(actorId: string): Promise<Actor> {
