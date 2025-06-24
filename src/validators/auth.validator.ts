@@ -2,6 +2,7 @@ import { checkSchema } from 'express-validator';
 
 export const registerValidator = checkSchema({
   name: {
+    trim: true,
     isString: {
       errorMessage: 'Name must be string.',
     },
