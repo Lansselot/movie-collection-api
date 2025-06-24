@@ -103,7 +103,7 @@ export class MovieService {
       };
     }
 
-    return Movie.findAll({
+    const movies = await Movie.findAll({
       where,
       include: [
         {
@@ -115,6 +115,21 @@ export class MovieService {
       limit,
       offset,
     });
+
+    if (sort === MovieSortField.TITLE) {
+      const sortedMovies = movies.sort((a, b) => {
+        const titleA = a.title.toLowerCase();
+        const titleB = b.title.toLowerCase();
+
+        return order === SortOrder.ASC
+          ? titleA.localeCompare(titleB)
+          : titleB.localeCompare(titleA);
+      });
+
+      return sortedMovies;
+    }
+
+    return movies;
   }
 
   async getMovieById(movieId: string): Promise<Movie> {
