@@ -33,6 +33,16 @@ export const registerValidator = checkSchema({
         'Password must contain only letters (a-z), numbers (0-9) and special characters',
     },
   },
+  confirmPassword: {
+    notEmpty: {
+      errorMessage: 'Confirm password must not be empty.',
+    },
+    custom: {
+      options: (value, { req }) =>
+        req.body.password && value === req.body.password,
+      errorMessage: 'Passwords do not match.',
+    },
+  },
 });
 
 export const loginValidator = checkSchema({
